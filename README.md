@@ -6,8 +6,6 @@
 
 # NoneBot Plugin MMM
 
-## 哪吒监控插件
-
 ![License](https://img.shields.io/github/license/eya46/nonebot-plugin-mmm)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![NoneBot](https://img.shields.io/badge/nonebot-2.3.0+-red.svg)
