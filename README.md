@@ -32,12 +32,6 @@
 - `mmm_block`: 是否block `message_sent` 后续matcher
 - `mmm_priority`: on `message_sent` 的优先级
 
-### 推荐配置项
-
-```dotenv
-
-```
-
 ## 依赖项
 
 ```toml
