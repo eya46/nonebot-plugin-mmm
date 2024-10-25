@@ -19,6 +19,7 @@ __plugin_meta__ = PluginMetadata(
     type="library",
     homepage="https://github.com/eya46/nonebot-plugin-mmm",
     config=Config,
+    supported_adapters={"~nonebot.adapters.v11"},
 )
 
 config = get_plugin_config(Config)

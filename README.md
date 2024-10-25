@@ -11,6 +11,11 @@
 ![NoneBot](https://img.shields.io/badge/nonebot-2.3.0+-red.svg)
 </div>
 
+## 作用
+
+让 `onebot v11` 协议中 `bot` 的消息作为正常事件进行处理
+> 小心死循环!
+
 ## 安装方式
 
 ### 依赖管理
