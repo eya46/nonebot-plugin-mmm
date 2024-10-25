@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "nonebot-plugin-mmm"
+version = "0.1.0"
+description = "Bot的消息也是消息!"
+authors = ["eya46 <61458340+eya46@users.noreply.github.com>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+nonebot2 = "^2.3.0"
+nonebot-adapter-onebot = "^2.1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 121
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "UP", "C", "T", "PYI", "PT", "Q", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+
+[tool.ruff.lint.isort]
+length-sort = true
+force-sort-within-sections = true
