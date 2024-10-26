@@ -1,6 +1,7 @@
 from typing import Any
+import asyncio
 
-from nonebot import on, get_plugin_config
+from nonebot import on, get_driver, get_plugin_config
 from pydantic import Field, BaseModel
 from nonebot.plugin import PluginMetadata
 from nonebot.internal.matcher import current_event
@@ -23,6 +24,25 @@ __plugin_meta__ = PluginMetadata(
 )
 
 config = get_plugin_config(Config)
+tasks: set["asyncio.Task"] = set()
+
+
+@get_driver().on_shutdown
+async def cancel_tasks():
+    for task in tasks:
+        if not task.done():
+            task.cancel()
+
+    await asyncio.gather(
+        *(asyncio.wait_for(task, timeout=10) for task in tasks),
+        return_exceptions=True,
+    )
+
+
+def push_event(bot: Bot, event: Event):
+    task = asyncio.create_task(bot.handle_event(event))
+    task.add_done_callback(tasks.discard)
+    tasks.add(task)
 
 
 @on("message_sent", block=config.mmm_block, priority=config.mmm_priority).handle()
@@ -30,10 +50,10 @@ async def _(event: Event, bot: Bot):
     data = event.model_dump()
     if data.get("message_type") == "private":
         data["post_type"] = "message"
-        await bot.handle_event(PrivateMessageEvent.model_validate(data))
+        push_event(bot, PrivateMessageEvent.model_validate(data))
     elif data.get("message_type") == "group":
         data["post_type"] = "message"
-        await bot.handle_event(GroupMessageEvent.model_validate(data))
+        push_event(bot, GroupMessageEvent.model_validate(data))
 
 
 @Bot.on_calling_api
