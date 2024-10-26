@@ -9,6 +9,7 @@
 ![License](https://img.shields.io/github/license/eya46/nonebot-plugin-mmm)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![NoneBot](https://img.shields.io/badge/nonebot-2.3.0+-red.svg)
+![:eya46](https://count.getloli.com/get/@:eya46-plugin-mmm?theme=gelbooru)
 </div>
 
 ## 作用
