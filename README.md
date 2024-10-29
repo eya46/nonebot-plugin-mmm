@@ -46,6 +46,17 @@
 
 - `mmm_block`: 是否block `message_sent` 后续matcher
 - `mmm_priority`: on `message_sent` 的优先级
+- `mmm_private`: 是否处理私聊消息, 默认为 `True`
+- `mmm_group`: 是否处理群聊消息, 默认为 `True`
+- `mmm_self`: 是否处理自己发给自己的消息, 默认为 `False`
+
+```env
+mmm_block=True
+mmm_priority=0
+mmm_private=True
+mmm_group=True
+mmm_self=False
+```
 
 ## 依赖项
 

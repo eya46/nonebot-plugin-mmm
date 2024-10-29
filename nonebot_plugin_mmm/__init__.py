@@ -12,6 +12,9 @@ from nonebot.adapters.onebot.v11 import Bot, Event, GroupMessageEvent, PrivateMe
 class Config(BaseModel):
     mmm_block: bool = Field(default=True, description="把message_sent后续block!")
     mmm_priority: int = Field(default=0, description="on(message_sent)的priority")
+    mmm_private: bool = Field(default=True, description="是否处理私聊消息")
+    mmm_group: bool = Field(default=True, description="是否处理群聊消息")
+    mmm_self: bool = Field(default=False, description="是否处理对自己的私聊消息")
 
 
 __plugin_meta__ = PluginMetadata(
@@ -44,18 +47,24 @@ def push_event(bot: Bot, event: Event):
     task = asyncio.create_task(bot.handle_event(event))
     task.add_done_callback(tasks.discard)
     tasks.add(task)
+    return event
 
 
 @on("message_sent", block=config.mmm_block, priority=config.mmm_priority).handle()
-async def _(event: Event, bot: Bot):
+async def patch_event(event: Event, bot: Bot):
     data = model_dump(event)
     if data.get("message_type") == "private":
+        if not config.mmm_private:
+            return
+        if str(data.get("target_id")) == bot.self_id and not config.mmm_self:
+            return
         data["post_type"] = "message"
-        push_event(bot, type_validate_python(PrivateMessageEvent, data))
-
+        return push_event(bot, type_validate_python(PrivateMessageEvent, data))
     elif data.get("message_type") == "group":
+        if not config.mmm_group:
+            return
         data["post_type"] = "message"
-        push_event(bot, type_validate_python(GroupMessageEvent, data))
+        return push_event(bot, type_validate_python(GroupMessageEvent, data))
 
 
 @Bot.on_calling_api
