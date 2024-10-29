@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-mmm"
-version = "0.1.5"
+version = "0.1.6"
 description = "Bot的消息也是消息!"
 authors = ["eya46 <61458340+eya46@users.noreply.github.com>"]
 readme = "README.md"

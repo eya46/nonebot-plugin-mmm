@@ -3,6 +3,7 @@ import asyncio
 
 from nonebot import on, get_driver, get_plugin_config
 from pydantic import Field, BaseModel
+from nonebot.compat import model_dump, type_validate_python
 from nonebot.plugin import PluginMetadata
 from nonebot.internal.matcher import current_event
 from nonebot.adapters.onebot.v11 import Bot, Event, GroupMessageEvent, PrivateMessageEvent
@@ -47,13 +48,14 @@ def push_event(bot: Bot, event: Event):
 
 @on("message_sent", block=config.mmm_block, priority=config.mmm_priority).handle()
 async def _(event: Event, bot: Bot):
-    data = event.model_dump()
+    data = model_dump(event)
     if data.get("message_type") == "private":
         data["post_type"] = "message"
-        push_event(bot, PrivateMessageEvent.model_validate(data))
+        push_event(bot, type_validate_python(PrivateMessageEvent, data))
+
     elif data.get("message_type") == "group":
         data["post_type"] = "message"
-        push_event(bot, GroupMessageEvent.model_validate(data))
+        push_event(bot, type_validate_python(GroupMessageEvent, data))
 
 
 @Bot.on_calling_api

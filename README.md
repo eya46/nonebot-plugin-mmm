@@ -22,6 +22,10 @@
 让 `onebot v11` 协议中 `bot` 的消息作为正常事件进行处理
 > 小心死循环!
 
+> 使用 `plugin-alconna` 记得添加 `ALCONNA_RESPONSE_SELF=True` 配置
+>
+> 原因: https://github.com/nonebot/plugin-alconna/releases/tag/v0.53.0
+
 ## 安装方式
 
 ### 依赖管理
