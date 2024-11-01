@@ -44,18 +44,31 @@
 
 ### 非必要配置项
 
-- `mmm_block`: 是否block `message_sent` 后续matcher
-- `mmm_priority`: on `message_sent` 的优先级
+- `mmm_block`: 是否block `message_sent` 后续matcher, 默认为 `True`
+- `mmm_priority`: on `message_sent` 的优先级, 默认为 `0`
 - `mmm_private`: 是否处理私聊消息, 默认为 `True`
 - `mmm_group`: 是否处理群聊消息, 默认为 `True`
 - `mmm_self`: 是否处理自己发给自己的消息, 默认为 `False`
+- `mmm_only_text`: 是否只处理文本消息, 默认为 `False`
+- `mmm_text_check`: 是否只处理符合指定开头的消息
+- `mmm_use_nb_start` 是否使用 `nonebot2` 的 `COMMAND_START`, 默认为 `False`
+- `mmm_text_start`: 检查的消息开头, 默认为 `{"",}` 即任何消息都通过
+- `mmm_lstrip`: 是否去除消息前缀, 默认为 `False`
+- `mmm_lstrip_num`: 去除消息前缀的数量, 默认为 `1`
 
-```env
-mmm_block=True
-mmm_priority=0
-mmm_private=True
-mmm_group=True
-mmm_self=False
+```toml
+mmm_block = True
+mmm_priority = 0
+mmm_private = True
+mmm_group = True
+mmm_self = False
+
+mmm_only_text = False # 只处理文本消息
+mmm_text_check = False # 只处理符合指定开头的消息
+mmm_use_nb_start = False # 使用 nonebot2 的 COMMAND_START
+mmm_text_start = [".", "/"] # 检查的消息开头 默认为 ["",] 即任何消息都通过
+mmm_lstrip = False # 去除消息前缀
+mmm_lstrip_num = 1 # 去除消息前缀的数量
 ```
 
 ## 依赖项

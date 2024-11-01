@@ -1,12 +1,13 @@
-from typing import Any
+from typing import Any, Union
 import asyncio
+from unittest.mock import right
 
 from nonebot import on, get_driver, get_plugin_config
 from pydantic import Field, BaseModel
 from nonebot.compat import model_dump, type_validate_python
 from nonebot.plugin import PluginMetadata
 from nonebot.internal.matcher import current_event
-from nonebot.adapters.onebot.v11 import Bot, Event, GroupMessageEvent, PrivateMessageEvent
+from nonebot.adapters.onebot.v11 import Bot, Event, MessageSegment, GroupMessageEvent, PrivateMessageEvent
 
 
 class Config(BaseModel):
@@ -15,6 +16,18 @@ class Config(BaseModel):
     mmm_private: bool = Field(default=True, description="是否处理私聊消息")
     mmm_group: bool = Field(default=True, description="是否处理群聊消息")
     mmm_self: bool = Field(default=False, description="是否处理对自己的私聊消息")
+
+    mmm_only_text: bool = Field(default=False, description="是否只处理文本消息")
+    mmm_text_check: bool = Field(default=False, description="是否检查文本消息")
+    mmm_use_nb_start: bool = Field(default=False, description="是否使用COMMAND_START的前缀")
+    mmm_text_start: set[str] = Field(
+        default_factory=lambda: {
+            "",
+        },
+        description="文本消息的开头",
+    )
+    mmm_lstrip: bool = Field(default=False, description="是否去除消息开头字符")
+    mmm_lstrip_num: int = Field(default=1, ge=1, description="去除消息开头字符的数量")
 
 
 __plugin_meta__ = PluginMetadata(
@@ -30,6 +43,9 @@ __plugin_meta__ = PluginMetadata(
 config = get_plugin_config(Config)
 tasks: set["asyncio.Task"] = set()
 
+cmd_start_tuple = tuple(get_driver().config.command_start if config.mmm_use_nb_start else config.mmm_text_start)
+cmd_start = " ".join(cmd_start_tuple)
+
 
 @get_driver().on_shutdown
 async def cancel_tasks():
@@ -43,7 +59,23 @@ async def cancel_tasks():
     )
 
 
-def push_event(bot: Bot, event: Event):
+def push_event(bot: Bot, event: Union[PrivateMessageEvent, GroupMessageEvent]):
+    message = event.message
+    if config.mmm_only_text and not message.only("text"):
+        # 只处理文本消息 and 不是纯文本消息
+        return
+
+    if config.mmm_text_check and message.has("text") and (text_message := message[0]).type == "text":
+        text = str(text_message)
+
+        if not text.startswith(cmd_start_tuple):
+            return
+
+        if config.mmm_lstrip:
+            left_text = text[: config.mmm_lstrip_num]
+            right_text = text[config.mmm_lstrip_num :]
+            message[0] = MessageSegment.text(left_text.lstrip(cmd_start) + right_text)
+
     task = asyncio.create_task(bot.handle_event(event))
     task.add_done_callback(tasks.discard)
     tasks.add(task)
