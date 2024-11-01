@@ -50,7 +50,7 @@
 - `mmm_group`: 是否处理群聊消息, 默认为 `True`
 - `mmm_self`: 是否处理自己发给自己的消息, 默认为 `False`
 - `mmm_only_text`: 是否只处理文本消息, 默认为 `False`
-- `mmm_text_check`: 是否只处理符合指定开头的消息
+- `mmm_text_check`: 是否只处理符合指定开头的消息, 默认为 `False`
 - `mmm_use_nb_start` 是否使用 `nonebot2` 的 `COMMAND_START`, 默认为 `False`
 - `mmm_text_start`: 检查的消息开头, 默认为 `{"",}` 即任何消息都通过
 - `mmm_lstrip`: 是否去除消息前缀, 默认为 `False`

@@ -1,6 +1,5 @@
 from typing import Any, Union
 import asyncio
-from unittest.mock import right
 
 from nonebot import on, get_driver, get_plugin_config
 from pydantic import Field, BaseModel
@@ -72,9 +71,9 @@ def push_event(bot: Bot, event: Union[PrivateMessageEvent, GroupMessageEvent]):
             return
 
         if config.mmm_lstrip:
-            left_text = text[: config.mmm_lstrip_num]
-            right_text = text[config.mmm_lstrip_num :]
-            message[0] = MessageSegment.text(left_text.lstrip(cmd_start) + right_text)
+            message[0] = MessageSegment.text(
+                text[: config.mmm_lstrip_num].lstrip(cmd_start) + text[config.mmm_lstrip_num :]
+            )
 
     task = asyncio.create_task(bot.handle_event(event))
     task.add_done_callback(tasks.discard)
