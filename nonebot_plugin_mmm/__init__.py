@@ -103,7 +103,10 @@ async def patch_send(bot: Bot, api: str, data: dict[str, Any]):
     """避免在PrivateMessageEvent事件中发消息时发给自己..."""
     if api not in ["send_msg", "send_private_msg"]:
         return
-    event = current_event.get()
+    try:
+        event = current_event.get()
+    except LookupError:
+        return
     if not isinstance(event, PrivateMessageEvent) or event.self_id != event.user_id:
         return
     data["user_id"] = getattr(event, "target_id", event.user_id)
