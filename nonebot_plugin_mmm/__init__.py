@@ -100,13 +100,23 @@ async def patch_event(event: Event, bot: Bot):
 
 @Bot.on_calling_api
 async def patch_send(bot: Bot, api: str, data: dict[str, Any]):
-    """避免在PrivateMessageEvent事件中发消息时发给自己..."""
-    if api not in ["send_msg", "send_private_msg"]:
+    """避免在PrivateMessageEvent事件中使用bot.send/send_msg给好友发消息发给自己"""
+    if api != "send_msg":
         return
+    if data.get("message_type", None) != "private":
+        return  # 只处理私聊消息
     try:
         event = current_event.get()
     except LookupError:
         return
-    if not isinstance(event, PrivateMessageEvent) or event.self_id != event.user_id:
-        return
-    data["user_id"] = getattr(event, "target_id", event.user_id)
+
+    target_id = getattr(event, "target_id", None)
+    user_id = data.get("user_id", None)
+    if (
+        isinstance(event, PrivateMessageEvent)  # 是私聊消息事件
+        and event.self_id == event.user_id  # bot发送
+        and user_id == event.self_id  # 发送对象是自己
+        and target_id is not None  # 有发送对象字段
+        and target_id != event.self_id  # 不是和自己聊天
+    ):
+        data["user_id"] = getattr(event, "target_id")
