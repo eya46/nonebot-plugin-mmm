@@ -9,6 +9,9 @@
 ![License](https://img.shields.io/github/license/eya46/nonebot-plugin-mmm)
 ![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
 ![NoneBot](https://img.shields.io/badge/nonebot-2.3.0+-red.svg)
+<a href="https://pypi.org/project/nonebot-plugin-mmm/">
+<img src="https://img.shields.io/pypi/v/nonebot-plugin-mmm?logo=python&logoColor=edb641" alt="pypi">
+</a>
 </div>
 
 <div align="center">
