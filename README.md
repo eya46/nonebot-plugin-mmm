@@ -26,10 +26,12 @@
 > 原因: https://github.com/nonebot/plugin-alconna/releases/tag/v0.53.0
 
 ## 注意事项
+
 > [!WARNING]
 > - 小心死循环！
 > - 在 `PrivateMessageEvent` 事件中, 使用 `send_msg` 给bot自己发消息会重定向到 `target_id`(如果存在的话)
->  - 请使用 `send_private_msg` 给bot自己发消息
+    (👆请使用 `send_private_msg` 给bot自己发消息)
+>
 
 ## 安装方式
 
